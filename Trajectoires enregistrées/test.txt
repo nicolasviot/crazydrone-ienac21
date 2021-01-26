@@ -1,0 +1,4 @@
+Take_off 0.5 0.1
+TRAIT 1.0 2.0 1.0 0.1
+TRAIT 1.0 1.0 0.0 0.1
+CERCLE 2.0 Droite 2.0 3.0 0.9

@@ -8,7 +8,7 @@ DEFAULT_HEIGHT = 0.5
 DEFAULT_VELOCITY = 0.1
 COUNTER_CLOCKWISE = 1
 CLOCKWISE = -1
-        
+     
 class _Takeoff:
     """
     private class. Define a takeoff
@@ -70,9 +70,9 @@ class _Circle:
 
     def execution(self, mc):
         if self.direction == CLOCKWISE:
-            mc.circle_CLOCKWISE(self.radius, self.velocity, self.angle)
+            mc.circle_right(self.radius, self.velocity, self.angle)
         elif self.direction == COUNTER_CLOCKWISE:
-            mc.circle_COUNTER_CLOCKWISE(self.radius, self.velocity, self.angle)
+            mc.circle_left(self.radius, self.velocity, self.angle)
 
 
 class _Segment:
@@ -145,7 +145,6 @@ class Drone:
     """
         Public Class. Exposes Methods for adding, updating or removing instructions from the flight plan
     """
-
     def __init__(self):
         # Initiate the low level drivers
         cflib.crtp.init_drivers(enable_debug_driver=False)
@@ -201,9 +200,8 @@ class Drone:
 
     def go(self):
         with SyncCrazyflie(self.URI, cf=Crazyflie(rw_cache='./cache')) as scf:
-            # We take off when the commander is created
-            with MotionCommander(scf) as mc:
-                self.flightPlan.execution(mc)
+            mc = MotionCommander(scf, 0.5)
+            self.flightPlan.execution(mc)
         
 
 def main():
@@ -219,6 +217,7 @@ def main():
     #We add instructions to the drone flight plan and store their identifier (optionnal, for later deletion or modification)
     #Segment are define by 3 cordinate, X (forward, m), Y (left, m), Z (up, m) and an optional velocity
     #Circle are define by a radius (m), a rotation (CLOCKWISE or COUNTER_CLOCKWISE), an optional velocity and an optional arc (angle_degree) for part of circle
+    takeoff_isntr = myDrone.addTakeoff()
     instr1 = myDrone.addSegment(0.5, 0, 0)
     instr2 = myDrone.addSegment(0, 0.5, 0)
     instr3 = myDrone.addSegment(-0.5, -0.5, 0)
